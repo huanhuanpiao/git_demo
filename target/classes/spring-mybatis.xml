@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <beans xmlns="http://www.springframework.org/schema/beans"  
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"  
+        xmlns:context="http://www.springframework.org/schema/context"  
+        xmlns:mvc="http://www.springframework.org/schema/mvc"  
+        xsi:schemaLocation="http://www.springframework.org/schema/beans    
+                            http://www.springframework.org/schema/beans/spring-beans.xsd    
+                            http://www.springframework.org/schema/context    
+                            http://www.springframework.org/schema/context/spring-context.xsd    
+                            http://www.springframework.org/schema/mvc    
+                            http://www.springframework.org/schema/mvc/spring-mvc.xsd">  
+                        
+                            
+      	<!-- 自动扫描 -->  
+      	<!-- service的配置文件 扫描service包,将 com.ql.ssm.service 包下 有 @Servcie 注解的类添加到容器中 -->
+        <context:component-scan base-package="com.ql.ssm" /> 
+        
+        
+        <!--配置数据库连接池-->
+         <!-- 加载 properties 配置文件  or 引入配置文件 -->  
+        <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+            <property name="location" value="classpath:jdbc.properties" />  
+        </bean>  
+ 
+ 		<!-- 配置数据源信息 -->
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">  
+            <property name="driverClassName" value="${driver}" />  
+            <property name="url" value="${url}" />  
+            <property name="username" value="${username}" />  
+            <property name="password" value="${password}" />  
+            <!-- 初始化连接大小 -->  
+            <property name="initialSize" value="${initialSize}"></property>  
+            <!-- 连接池最大数量 -->  
+            <property name="maxActive" value="${maxActive}"></property>  
+            <!-- 连接池最大空闲 -->  
+            <property name="maxIdle" value="${maxIdle}"></property>  
+            <!-- 连接池最小空闲 -->  
+            <property name="minIdle" value="${minIdle}"></property>  
+            <!-- 获取连接最大等待时间 -->  
+            <property name="maxWait" value="${maxWait}"></property>  
+        </bean>  
+ 
+ 
+ 		<!-- 配置sqlSessionFactory工厂对象,这里用的工厂不是mybatis提供的,是由 SpringMVC 框架单独提供的 -->
+ 		<!-- 该配置目的是把sqlSession对象创建权交给spring,在service层实现类中,直接注入Mapper对象,直接调用方法操作数据库 -->
+        <!-- Spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->   
+        <!-- 配置sqlSessionFactory -->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+            <property name="dataSource" ref="dataSource" />  
+            <!-- 自动扫描mapping.xml文件 -->  
+            <property name="mapperLocations" value="classpath:com/ql/ssm/mapping/*.xml"></property> 
+            <property name="configLocation" value="classpath:mybatis-config.xml"></property> 
+        </bean>  
+ 
+ 
+ 		<!-- 扫描mapper包,为mapper创建实现类 -->
+		<!-- 原理是加载 com.ql.ssm.dao 包下的接口,然后根据接口名字找相同全限定名的xml文件 , 所以配置文件要和接口的全限定名相同 -->
+        <!-- DAO接口所在包名，Spring会自动查找其下的类 -->  
+        <!-- 通过mapper扫描器MapperScanner , 扫描com.ql.ssm.dao包下的所有mapper接口,批量加载配置 -->
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+            <property name="basePackage" value="com.ql.ssm.dao" />  
+            <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
+        </bean>  
+        
+               
+        <!-- 配置平台事务管理器,事务管理是要控制事务的提交与回滚,所以需要数据库连接池的connection对象来操作,所以需要配置一个数据源属性 -->
+ 		<!-- 需要开启事务 ，因此需要 配置事务管理器-->
+        <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+        <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+            <property name="dataSource" ref="dataSource" />  
+        </bean>  
+ 
+ 
+    </beans>

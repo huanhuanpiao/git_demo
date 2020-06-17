@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<script src="https://cdn.staticfile.org/angular.js/1.6.3/angular.min.js"></script>
+	<script src="//cdn.bootcss.com/angular.js/1.5.8/angular-route.js"></script>
+
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	
+<body>
+
+
+
+
+	<div ng-app="myApp" ng-controller="siteCtrl">
+		<!-- {{all}}
+		<br/> <br/>
+		{{all.config}}
+		<br/> <br/>
+		{{all.data}}
+		<br/> <br/>
+		{{all.headers}}
+		<br/> <br/>
+		{{all.status}} -->
+
+		<form action="user/upload" method="post" enctype="multipart/form-data">  
+        	选择文件:<input type="file" name="file" width="120px">  
+        			<input type="submit" value="上传">  
+    	</form>
+    	
+    	<hr>  
+	    <form action="user/down" method="get">  
+	        <input type="submit" value="下载">  
+	    </form> 
+		
+		
+		<div class="container">
+			<div id="accordion">
+				<div class="card">
+					<div class="card-header">
+						<a class="card-link" data-toggle="collapse" href="#collapseOne"> 选项一 </a>
+					</div>
+					
+					<!-- 默认不折叠 :  class="collapse show" -->
+					<div id="collapseOne" class="collapse" data-parent="#accordion">  
+						<div class="card-body">
+							<div class="container">
+							  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">新增</button> <br/><br/>
+							   
+							  <!-- 模态框 -->
+							  <div class="modal fade" id="myModal">
+							    <div class="modal-dialog">
+							      <div class="modal-content">
+							   
+							        <!-- 模态框头部 -->
+							        <div class="modal-header">
+							          <h4 class="modal-title">模态框头部</h4>
+							          <button type="button" class="close" data-dismiss="modal">&times;</button>
+							        </div>
+							   
+							        <!-- 模态框主体 -->
+							        <div class="modal-body">
+							          
+							          <form action="user/admin">
+									    <div class="form-group">
+									      <label for="email">管理员:</label>
+									      <input type="text" class="form-control" name="admini" placeholder="请输入...">
+									    </div>
+									    <div class="form-group">
+									      <label for="pwd">密码:</label>
+									      <input type="password" class="form-control" name="pass" placeholder="请输入...">
+									    </div>
+									    <div class="form-check">
+									      <label class="form-check-label">
+									        <input class="form-check-input" type="checkbox"> 记住我
+									      </label>
+									    </div>
+									    <button type="submit" class="btn btn-primary">提交</button>
+									  </form>
+									  
+							        </div>
+							   
+							        <!-- 模态框底部 -->
+							        <div class="modal-footer">
+							          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+							        </div>
+							   
+							      </div>
+							    </div>
+							  </div>
+							  
+							  	<!-- 输入过滤: -->
+							  	<p><input type="text" ng-model="test.admini"></p>
+							  	
+							  	
+								<table class="table table-striped table-bordered table-hover table-condensed">
+									<thead style="background-color: #BFEFFF">
+										<tr>
+											<th style="text-align: center">编号</th>
+											<th style="text-align: center">用户名</th>
+											<th style="text-align: center">密码</th>
+											<th style="text-align: center">操作</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="a in all.data | filter:{admini: test.admini} | orderBy:'id'">
+											<td style="text-align: center">{{a.id}}</td>
+											<td style="text-align: center"  id="text">{{a.admini}}</td>
+											<td style="text-align: center">{{a.pass}}</td>
+											<td style="text-align: center">
+												<button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModals" ng-click="editUser(a.id,a.admini,a.pass)">编辑</button>&nbsp&nbsp
+												<!-- 模态框 -->
+												  <div class="modal fade" id="myModals">
+												    <div class="modal-dialog">
+												      <div class="modal-content">
+												   
+												        <!-- 模态框头部 -->
+												        <div class="modal-header">
+												          <h4 class="modal-title">模态框头部</h4>
+												          <button type="button" class="close" data-dismiss="modal">&times;</button>
+												        </div>
+												   
+												        <!-- 模态框主体 -->
+												        <div class="modal-body">
+												          
+												          <form action="user/update">
+												          	<div class="form-group">
+														      <label for="id">编号:</label>
+														      <input type="text" class="form-control" name="id" ng-model="id" readonly="true">
+														    </div>
+														    <div class="form-group">
+														      <label for="email">管理员:</label>
+														      <input type="text" class="form-control" name="admini" ng-model="admini">
+														    </div>
+														    <div class="form-group">
+														      <label for="pwd">密码:</label>
+														      <input type="password" class="form-control" name="pass" ng-model="pass">
+														    </div>
+														    <div class="form-check">
+														      <label class="form-check-label">
+														        <input class="form-check-input" type="checkbox"> 记住我
+														      </label>
+														    </div>
+														    <button type="submit" class="btn btn-primary">提交</button>
+														  </form>
+														  
+												        </div>
+												   
+												        <!-- 模态框底部 -->
+												        <div class="modal-footer">
+												          <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+												        </div>
+												   
+												      </div>
+												    </div>
+												  </div>
+												
+												
+												
+												<a type="submit" class="btn btn-danger" ng-click="del(a.id)">删除</a>
+											</td>
+										</tr>
+									</tbody>																			
+								</table>		
+								
+								<!-- <center>
+									<p>当前 {{names.pageNum }} 页,总 {{names.pages }} 页,总 {{names.total }} 条记录</p>
+									<form ng-submit="myFunc()">
+									    <input type="submit" value="首页" ng-click="pageNo = 1">&nbsp&nbsp
+									    <input type="submit" value="上一页" ng-click="pageNo = pageNo-1">&nbsp&nbsp
+									    <input type="submit" value="下一页" ng-click="pageNo = pageNo+1">&nbsp&nbsp	
+									    <input type="submit" value="尾页" ng-click="pageNo = pageNo+1">&nbsp&nbsp									    
+									</form>
+									&nbsp&nbsp
+									<c:if test="{{names.hasPreviousPage }}">
+										<a href="index.html">
+											
+										</a>&nbsp&nbsp
+									</c:if>
+							
+									<c:if test="{{names.hasNextPage }}">
+										<a href="http://localhost:8080/pagehelper/user/indexe?pageNo=">下一页</a>
+										<button ng-click="pageNo = pageNo + 1">点我！</button>
+										<form ng-submit="myFunc()">
+										    <input type="text" ng-model="pageNo" placeholder="请输入页码"  style="width:115px;">
+										    <input type="submit" value="跳转">
+										</form>
+										&nbsp&nbsp
+									</c:if>
+								</center> -->					
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- <form action="user/toParticulars"> -->
+		<!-- <div class="form-group">
+			<label for="email"></label> -->
+			编&nbsp&nbsp&nbsp&nbsp号  :  <input type="text" name="id" ng-model="id" placeholder="请输入...">  <br/><br/>
+		<!-- </div> -->
+		
+			管理员 :   <input type="text" name="admini" ng-model="admini" placeholder="请输入...">  <br/><br/>
+
+		
+		<a type="submit" class="btn btn-primary" ng-click="toParticulars()">提交</a> <hr/>
+	<!-- </form> -->
+	{{ vv }}
+	{{ vv[0] }}
+		
+		
+		
+	</div>
+
+	
+
+
+
+	<script>
+		var app = angular.module('myApp', []);
+
+		app
+				.controller(
+						'siteCtrl',
+						function($scope, $http) {
+
+							$http({
+								method : 'GET',
+								url : 'http://localhost:8080/ssm9/user/selall'
+							}).then(function successCallback(response) {
+								//console.log(response);
+
+								//判断各种数据的类型
+								/* console.log(typeof response);
+								console.log(typeof response.data);
+								console.log(typeof response.data[0]);
+								console.log(typeof response.data[0].id);
+								console.log(typeof response.data[0].admini); */
+
+								$scope.all = response;
+							});
+
+							
+							// 
+							$scope.toParticulars = function() {
+								//console.log($scope.id);
+								//console.log($scope.admini);
+								if($scope.id == null || $scope.admini == null){
+									alert("不能为空值");
+									return false;
+								}
+								
+									$http(
+											{
+												method : 'POST',
+												url : 'http://localhost:8080/ssm9/user/toParticulars', 
+												params : {
+													id : $scope.id,
+													admini : $scope.admini
+												}
+											})
+											.then(
+													function successCallback(response) {													
+
+														console.log(response);
+														console.log(JSON.parse(response.data.admin)[0]);
+														
+														$scope.vv = JSON.parse(response.data.admin);
+														
+														//判断各种数据的类型
+														console.log(typeof response); // object
+														console.log(typeof response.data); // object
+														console.log(typeof response.data.admin); // string
+														console.log(typeof JSON.parse(response.data.admin)); // object
+														console.log(typeof JSON.parse(response.data.admin)[0]); // object
+														console.log(typeof JSON.parse(response.data.admin)[0].admini); // string
+														
+														
+														$scope.allinfo = response.data;
+														//window.location = "http://localhost:8080/ssm9/index.html";
+													});
+								
+							}
+							
+							// ID 删除一条记录
+							$scope.del = function(id) {
+								console.log(id);
+
+								question = confirm("确实要删除吗?")
+								if (question != "0") {
+									$http(
+											{
+												method : 'POST',
+												url : 'http://localhost:8080/ssm9/user/delete',
+												params : {
+													id : id
+												}
+											})
+											.then(
+													function successCallback(
+															response) {
+														window.location = "http://localhost:8080/ssm9/index.html";
+													});
+								}
+							}
+
+							
+							// 点击编辑按钮, 回显一条记录
+							$scope.admini = '';
+							$scope.pass = '';
+
+							$scope.editUser = function(id, admini, pass) {
+
+								console.log(id + admini + pass);
+
+								$scope.id = id;
+								$scope.admini = admini;
+								$scope.pass = pass;
+							};
+
+						});
+	</script>
+
+</body>
+</html>

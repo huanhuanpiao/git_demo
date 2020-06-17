@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+
+<!--  !!! 导入顺序一定不能乱，固定的   -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+	<!-- 可以引入本地文件 -->
+	<!-- <script src="vue.min.js"></script> -->
+	
+	<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+    
+    <style>
+        #th th{
+            background-color: #50a9fa;
+            color: aliceblue;
+            font-size: large;
+        }
+    </style>
+    
+</head>
+<body>
+
+
+
+	<!-- <div id="app" align="center"> -->
+	<div id="app">	
+	
+	
+		{{info}} 			<hr/> 
+		{{info.data}}		<hr/> 
+		
+		
+		<button v-on:click="get()" class="btn btn-danger">获取其他内容</button>
+		<button data-toggle="modal" data-target="#myModalx" class="btn btn-danger">新增管理员</button>
+		
+		
+		<hr/> <br/>
+		 
+		 
+		<!-- 新增表单 -->
+		<div class="modal fade" id="myModalx">
+			<div class="modal-dialog">
+				<div class="modal-content">
+	
+					<div class="modal-header">
+						<h4 class="modal-title">模态框头部</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+	
+					<div class="modal-body">
+					
+						<form name="myForm" action="user/admin">
+							<div class="form-group">
+								<label for="email">管理员:</label>
+								<input type="text" class="form-control" name="admini">
+							</div>
+							<div class="form-group">
+								<label for="pwd">密码:</label>
+								<input type="password" class="form-control" name="pass">
+							</div>
+							<div class="form-check">
+								<label class="form-check-label">
+									<input class="form-check-input" type="checkbox">
+									记住我
+								</label>
+							</div>
+							<button type="submit" class="btn btn-primary">提交</button>
+						</form>
+	
+					</div>	
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+					</div>
+	
+				</div>
+			</div>
+		</div>
+				
+		
+	    <table class="table table-bordered" style="text-align: center;">
+	        <tr>
+	        	<th>数据</th>
+	            <th>编号</th>
+	            <th>姓名</th>
+	            <th>密码</th>
+	            <th>操作</th>
+	        </tr>
+	        <tr v-for="a in info.data ">
+	        	<td>{{ a }}</td>
+	            <td style="text-align:center;">{{ a.id }}</td>
+	            <td style="text-align:center;">{{ a.admini }}</td>
+	            <td style="text-align:center;">{{ a.pass }}</td>
+	            <td style="text-align:center;">
+	            
+	            	<button class="btn btn-danger" v-on:click="edit(a.id, a.admini, a.pass)" data-toggle="modal" data-target="#myModals">编辑</button>
+	                <button class="btn btn-danger" v-on:click="del(a.id)">删除</button>
+	                	                
+	                <!-- 编辑表单 -->
+					<div class="modal fade" id="myModals">
+						<div class="modal-dialog">
+							<div class="modal-content">
+										
+								<div class="modal-header">
+									<h4 class="modal-title">模态框头部</h4>
+									<button type="button" class="close" data-dismiss="modal">&times;</button>
+								</div>
+				
+								<div class="modal-body">
+				
+									<form name="myForm" action="user/update">
+										<div class="form-group">
+											<label for="id">编号:</label>
+											<input type="text" class="form-control" name="id" v-model="id" readonly="true">
+										</div>
+										<div class="form-group">
+											<label for="email">管理员:</label>
+											<input type="text" class="form-control" name="admini" v-model="admini">
+										</div>
+										<div class="form-group">
+											<label for="pwd">密码:</label>
+											<input type="password" class="form-control" name="pass" v-model="pass">
+										</div>
+										<div class="form-check">
+											<label class="form-check-label">
+												<input class="form-check-input" type="checkbox">
+												记住我
+											</label>
+										</div>
+										<button type="submit" class="btn btn-primary">提交</button>
+									</form>
+				
+								</div>
+	
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
+								</div>
+											
+							</div>
+						</div>
+					</div>
+					
+					  
+	            </td>
+	        </tr>
+	    </table>
+	    
+	    
+	</div>
+	
+	
+	
+	
+	<script>
+	
+	    //vue的生命周期   
+	    new Vue({
+	    	
+	    	
+	        el:'#app',
+	        data () {
+	   	     return {
+	   	       info: '',
+	   	       id:'',
+	   	       admini:'',
+	   	       pass:''
+	   	     }
+	   	    },   
+	   	   
+	       /* mounted () {
+	  	    axios
+	  	      .post('http://localhost:8080/ssm9/user/selall')
+	  	      .then(response => (this.info = response))
+	  	      
+	  	      // 请求失败处理
+	  	      .catch(function (error) { 	  	    	  
+	  	        	console.log(error);	  	      
+	  	      });
+	  	    },  */
+	   	   
+		    methods: {
+		    		    	
+		    	
+		    	// 查询
+				get: function() {
+					
+					axios
+			  	      .post('http://localhost:8080/ssm9/user/selall')
+			  	      .then(response => (this.info = response))
+			  	      
+			  	      // 请求失败处理
+			  	      .catch(function (error) { 	  	    	  
+			  	        	console.log(error);	  	      
+			  	      });				
+				},
+		    		    	
+		    	
+				
+		    	
+				
+		    	// 编辑
+				edit: function(id,admini,pass) {
+					
+					console.log(id);
+					console.log(admini);
+					console.log(pass);
+					
+					this.id = id;
+					this.admini = admini;
+					this.pass = pass;					
+				},
+		    	
+		    	
+				
+				
+		    	
+		    	// 删除
+				del: function(id) {
+					
+					console.log(id);
+					
+					question = confirm("确实要删除吗?") ;
+					
+					if (question !="0"){
+						
+						//发送 post 请求
+		                this.$http.post('http://localhost:8080/ssm9/user/delete',{ id:id },{emulateJSON:true}).then(function(res){
+		                    document.write(res.body);    
+		                },function(res){
+		                    console.log(res.status);
+		                });						
+						
+		                alert("删除成功");
+						window.location.href = "http://localhost:8080/ssm9/vue.html";
+						
+					} else {
+						return false;
+					}
+										
+				}
+				
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+	  	   
+			}
+	   	  
+  	  
+	    })
+	    
+	</script>
+
+
+<!-- 
+			<thead>		
+				<tr>
+					<th>编号</th>
+					<th>管理员</th>
+					<th>密码</th>				
+					<th>操作</th>
+				</tr>
+			</thead>
+			
+			
+		<div>姓名：{user.id}</div>
+        <div>年龄：{user.admini}</div>
+        <div>性别：{user.pass}</div>
+        <hr /> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

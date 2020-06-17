@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ql.ssm.dao.UserMapper">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	<!-- 学生信息模糊查询 -->
+	<select id="mohu" resultType="Admin">
+    	select * from admin where admini LIKE CONCAT(CONCAT('%',#{admini},'%')) 
+    </select>
+
+	<!-- ID 删除管理员 -->
+	<delete id="delete" parameterType="Integer">
+		delete from admin where id = #{id}
+	</delete>
+
+	<!-- name 删除管理员 -->
+	<delete id="dela" parameterType="String">
+		delete from admin where admini=#{admini}
+	</delete>
+	
+	<!-- 修改管理员 -->
+	<update id="update" parameterType="Admin">
+    	update admin set admini=#{admini},pass=#{pass} where id=#{id}
+    </update>	
+	
+	<!-- 增加管理员 -->
+	<insert id="admin" parameterType="Admin">
+		INSERT INTO admin(admini,pass)VALUES(#{admini},#{pass})
+	</insert>
+    
+    <select id="selall" resultType="Admin">
+    	select * from admin 
+    </select>
+
+	<!--  注册user表 -->
+	<insert id="saveP" parameterType="User">
+		INSERT INTO user(account,username,password,pay,introducer1)VALUES(#{account},#{username},#{password},#{pay},#{introducer1})
+	</insert>
+	
+	<!--  注册person表 -->
+	<insert id="saveperson" parameterType="Person">
+		INSERT INTO person(username,account,pay)VALUES(#{username},#{account},#{pay})
+	</insert>
+
+	<!--  用户登录验证 -->
+	<select id="logincheck" parameterType="String" resultType="String">
+    	select username from user where username=#{username} and password=#{password}
+    </select>
+    
+    <!--  管理员登录后重定向到这里查出person表所有信息 -->
+    <select id="selacc" resultType="Person">
+    	SELECT * FROM person 
+    </select>
+    
+    <!--  查询填写的某推荐人名字在user表中introducer1字段出现的次数 -->
+    <select id="selnum" parameterType="String" resultType="Integer">
+    	SELECT sum(introducer1=#{introducer1}) as num from user
+    </select>
+    
+    <!--  管理员登录验证 -->
+    <select id="admincheck" parameterType="String" resultType="String">
+    	select admini from admin where admini=#{admini} and pass=#{pass}
+    </select>
+    
+    <!--  用户登录后查看自己的person表中的信息 -->
+    <select id="self" parameterType="String" resultType="Person">
+    	SELECT * FROM person where username=#{username}
+    </select>
+    
+    <!--  推荐人头数+1 -->
+    <update id="updatenum" parameterType="String">
+        UPDATE person SET number=number+1 where username=#{introducer1}
+    </update>
+    
+    <!--  查出填写的推荐人目前的所有信息 -->
+    <select id="selcheck" parameterType="String" resultType="Person">
+    	SELECT * FROM person where username=#{introducer1}
+    </select>
+    
+    <!--  拉够三人的修改为‘是’ -->
+    <update id="updateche" parameterType="String">
+        UPDATE person SET numcheck="是" where username=#{introducer1}
+    </update>
+    
+    
+
+</mapper>

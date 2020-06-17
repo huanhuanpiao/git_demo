@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+</head>
+<body>
+
+<div id="myDiv"><h2  id="myDiv1">使用 AJAX 修改该文本内容</h2></div>
+<button type="button" onclick="loadXMLDoc()">修改内容</button>
+
+
+<script>
+
+
+
+	function loadXMLDoc(){
+	
+		var xmlhttp = new XMLHttpRequest();
+	
+		console.log(xmlhttp);
+		
+		
+		
+		xmlhttp.onreadystatechange = function(){
+			
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200){
+				
+				console.log(typeof JSON.parse(xmlhttp.response)[0]);
+				console.log(document.getElementById("myDiv"));
+				
+				document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+				
+				console.log(document.getElementById("myDiv"));
+				
+			}
+			
+		}
+		
+		xmlhttp.open("POST","http://localhost:8080/ssm9/user/toParticulars",true);  
+		
+		// POST 提交必须 先设置请求头，再 调用send()
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		
+		xmlhttp.send("id=22&admini=55");
+		
+	}
+	
+</script>
+
+</body>
+</html>

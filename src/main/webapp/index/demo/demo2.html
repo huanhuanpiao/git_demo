@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" type="text/css" href="../css/gm.css">
+	<script type="text/javascript" src="../js/gm.js"></script>
+    <title>GridManager:使用静态数据渲染</title>
+    <style>
+		html, body{
+			width: 100%;
+			height: 100%;
+			overflow-x:hidden;
+			margin: 0;
+			padding: 0;
+		}
+        h2{
+            font-size:22px;
+            padding:10px 30px;
+            color:#333;
+        }
+        p{
+            font-size:14px;
+            padding:10px 30px;
+            color:#333;
+            text-indent:2em;
+			margin: 0;
+        }
+        hr{
+            margin-top: 18px;
+            margin-bottom: 18px;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+        .plugin-action{
+            display: inline-block;
+            color: steelblue;
+            margin-right: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+		.bottom-bar{
+			background: #f8f8f8;
+			padding: 10px;
+			margin-top: 10px;
+		}
+		.bottom-bar button{
+			padding: 5px 20px;
+			margin-right: 10px;
+		}
+		.bottom-bar a{
+			font-size: 12px;
+			padding: 5px 20px;
+			margin-right: 10px;
+		}
+    </style>
+</head>
+
+<body>
+	<table grid-manager="cccc"></table>
+	<div class="bottom-bar">
+		<button id="init-gm" disabled>init</button>
+		<button id="destroy-gm" disabled>destroy</button>
+		<button id="reset-gm" disabled>重置数据</button>
+		<button id="update-tree" disabled>切换展开状态</button>
+		<a href="https://github.com/baukh789/GridManager/blob/master/src/demo/demo2.html" target="_blank">查看源码</a>
+	</div>
+
+	<script>
+		// 静态数据
+		var ajaxData1 = {
+			"data":[
+				{
+                    "id": 1,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序",
+                    "children": [
+                        {
+                            "id": 11,
+                            "name": "baukh-11",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序",
+                            "children": [
+                                {
+                                    "id": 111,
+                                    "name": "baukh-111",
+                                    "age": "28",
+                                    "createDate": "2015-03-12",
+                                    "info": "野生前端程序"
+                                },
+                                {
+                                    "id": 112,
+                                    "name": "baukh-112",
+                                    "age": "28",
+                                    "createDate": "2015-03-12",
+                                    "info": "野生前端程序"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 12,
+                            "name": "baukh-12",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        },
+                        {
+                            "id": 13,
+                            "name": "baukh-13",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        }
+                    ]
+				},
+				{
+                    "id": 2,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				},
+				{
+                    "id": 3,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				},
+				{
+                    "id": 4,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序",
+                    "children": [
+                        {
+
+                            "id": 41,
+                            "name": "baukh",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        },
+                        {
+
+                            "id": 42,
+                            "name": "baukh",
+                            "age": "28",
+                            "createDate": "2015-03-12",
+                            "info": "野生前端程序"
+                        }
+                    ]
+				},
+				{
+                    "id": 5,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				},{
+                    "id": 6,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				},
+				{
+                    "id": 7,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				},
+				{
+                    "id": 8,
+					"name": "baukh",
+					"age": "28",
+					"createDate": "2015-03-12",
+					"info": "野生前端程序"
+				}
+			],
+			"totals": 8
+		};
+
+		const getData = num => {
+		    const data = [];
+		    let child = [];
+
+            for (let i = 1; i<= num; i++) {
+                child = [];
+                for (let j = 1; j<= 40; j++) {
+                    child.push({
+                        "id": parseInt((i.toString() + j.toString()), 10),
+                        "name": `baukh-${i}-${j}`,
+                        "age": "28",
+                        "createDate": "2015-03-12",
+                        "info": "野生前端程序"
+                    });
+                }
+                data.push({
+                    "id": i,
+                    "name": `baukh-${i}`,
+                    "age": "28",
+                    "createDate": "2015-03-12",
+                    "info": "野生前端程序",
+                    "children": child
+                });
+            }
+
+		    return data;
+        };
+		var ajaxData2 = {
+			"data": getData(4),
+			"totals": 2
+		};
+	</script>
+	<script type="text/javascript">
+		// 实例化
+		var table = document.querySelector('table[grid-manager]');
+		function init(){
+			table.GM({
+                gridManagerName:'test',
+                // topFullColumn: {
+                //     template: function(){
+                //         return `<div style="padding: 12px; text-align: center;">
+                //                 快速、灵活的对Table标签进行实例化，让Table标签充满活力。该项目已开源,
+                //                 <a target="_blank" href="https://github.com/baukh789/GridManager">点击进入</a>
+                //                 github
+                //            </div>`;
+                //     }
+                // },
+				emptyTemplate: '<div class="gm-empty-template">什么也没有</div>',
+                supportAjaxPage: true,
+                // supportCheckbox: false,
+                // supportAutoOrder: false,
+                supportTreeData: true,
+                supportMoveRow: true,
+                treeConfig: {
+                    // insertTo: 'age',
+                    openState: false,
+                    treeKey: 'children'
+                },
+				ajaxData: ajaxData2,
+                // useRadio: true,
+				pageSize: 20,
+				query: {ex: '用户自定义的查询参数,格式:{key:value}'},
+				columnData: [{
+					key: 'name',
+					remind: 'the username',
+					sorting: 'up',
+					width: '200px',
+					text: 'username'
+				},{
+					key: 'age',
+					remind: 'the age',
+					sorting: '',
+					width: '200px',
+					text: 'age'
+				},{
+					key: 'info',
+					remind: 'the info',
+					sorting: '',
+					text: 'info'
+				},{
+                    key: 'createDate',
+                    text: '创建时间',
+                    remind: 'the createDate',
+                    sorting: 'down',
+                    width: '200px',
+                    fixed: 'right'
+                },{
+					key: 'operation',
+					remind: '修改创建时间',
+					sorting: '',
+					width: '130px',
+					text: '修改创建时间',
+                    align: 'center',
+                    fixed: 'right',
+					template: function(operation, rowObject){
+						return `<span class="plugin-action">修改</span>`;
+					}
+				}
+				],
+				pagingBefore:function(query){
+					console.log('Event: 分页前', query);
+				},
+				pagingAfter: function(query){
+					console.log('Event: 分页后', query);
+				},
+				sortingBefore:function(query){
+					console.log('Event: 排序前', query);
+				},
+				sortingAfter: function(query){
+					console.log('Event: 排序后', query);
+				},
+				ajaxSuccess: function(data){
+					console.log('Event: ajaxSuccess', data);
+				},
+                checkedAfter: function(list){
+                    console.log(list);
+                }
+			}, function(query){
+				// 渲染完成后的回调函数
+				console.log(query);
+				// GM.setCheckedData('test', ajaxData1.data[2]);
+			});
+		}
+	</script>
+	<script>
+
+		var initDOM = document.getElementById('init-gm');
+		var destroyDOM = document.getElementById('destroy-gm');
+		var resetDOM = document.getElementById('reset-gm');
+		var updateTreeDOM = document.getElementById('update-tree');
+		// 绑定初始化事件
+		initDOM.onclick = function(){
+			init();
+			initDOM.setAttribute('disabled', '');
+			destroyDOM.removeAttribute('disabled');
+			resetDOM.removeAttribute('disabled');
+		};
+
+		// 绑定消毁事件
+		destroyDOM.onclick = function(){
+            GM.destroy('test');
+			initDOM.removeAttribute('disabled');
+			destroyDOM.setAttribute('disabled', '');
+			resetDOM.setAttribute('disabled', '');
+		};
+
+		// 绑定修改数据方法事件
+		let newData = ajaxData1;
+		resetDOM.onclick = function(){
+			newData = newData === ajaxData2 ? ajaxData1 : ajaxData2;
+            GM.setAjaxData('test', newData, function(data){
+				console.log('setAjaxData', data);
+			});
+		};
+
+		// 绑定更新树打开状态事件
+        let openState = false;
+        updateTreeDOM.onclick = function(){
+            openState = !openState;
+            GM.updateTreeState('test', openState);
+        };
+
+		// 初始进入时, 执行init 方法
+		init();
+		initDOM.setAttribute('disabled', '');
+		destroyDOM.removeAttribute('disabled');
+		resetDOM.removeAttribute('disabled');
+        updateTreeDOM.removeAttribute('disabled');
+		jTool(table).on('click', '.plugin-action', function(e) {
+            const row = GM.getRowData('test', this.parentElement.parentElement);
+            GM.updateRowData('test', 'id', {id: row.id, createDate: new Date().toLocaleDateString()});
+        });
+	</script>
+</body>
+</html>
